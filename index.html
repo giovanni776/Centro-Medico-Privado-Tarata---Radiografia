@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Centro de Rayos X</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Centro de Rayos X</h1>
+  </header>
+
+  <main>
+    <div class="card">
+      <h2>Ingreso del personal</h2>
+      <button onclick="window.location.href='upload.html'">Entrar como operador</button>
+    </div>
+
+    <div class="card">
+      <h2>Ver radiografía</h2>
+      <form onsubmit="event.preventDefault(); viewImage();">
+        <input type="text" id="codigo" placeholder="Ingrese su código" required>
+        <button type="submit">Ver radiografía</button>
+      </form>
+    </div>
+  </main>
+
+  <script>
+    function viewImage() {
+      const code = document.getElementById("codigo").value.trim();
+      window.location.href = `view.html?code=${code}`;
+    }
+  </script>
+</body>
+</html>

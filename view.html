@@ -1,0 +1,47 @@
+<<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Ver Radiografía</title>
+  <style>
+    body { font-family: Arial; text-align: center; padding: 30px; background:#eef1f6; }
+    .card { background:white; padding:20px; margin:auto; border-radius:10px; width:360px; box-shadow:0 4px 10px rgba(0,0,0,0.1);}
+    input, button { margin-top:10px; padding:8px; width:90%; border-radius:6px; }
+    button { background:#2563eb; color:white; border:none; cursor:pointer; }
+    button:hover{ background:#1d4ed8;}
+    img { margin-top:15px; max-width:100%; border-radius:8px;}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Ver su Radiografía</h2>
+    <input type="text" id="codigo" placeholder="Ingrese su código" /><br>
+    <button onclick="verRadiografia()">Ver</button>
+    <div id="resultado"></div>
+  </div>
+
+  <script>
+    const WEB_APP_URL = "TU_URL_DE_APLICACION_WEB"; // misma del backend
+
+    function verRadiografia() {
+      const code = document.getElementById("codigo").value.trim();
+      if (!code) return alert("Ingrese su código");
+
+      fetch(`${WEB_APP_URL}?code=${code}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.error) {
+            document.getElementById("resultado").innerHTML = `<p style="color:red;">${data.error}</p>`;
+          } else {
+            const id = data.url.match(/[-\w]{25,}/)[0];
+            document.getElementById("resultado").innerHTML = `
+              <p>✅ Radiografía encontrada:</p>
+              <img src="https://drive.google.com/uc?export=view&id=${id}" alt="Radiografía">
+            `;
+          }
+        })
+        .catch(err => alert("Error: " + err));
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Subir Radiografía</title>
+  <style>
+    body { font-family: Arial; text-align: center; padding: 30px; background:#eef1f6; }
+    .card { background:white; padding:20px; margin:auto; border-radius:10px; width:360px; box-shadow:0 4px 10px rgba(0,0,0,0.1);}
+    input, button { margin-top:10px; padding:8px; width:90%; border-radius:6px; }
+    button { background:#2563eb; color:white; border:none; cursor:pointer; }
+    button:hover{ background:#1d4ed8;}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Subir Radiografía</h2>
+    <input type="file" id="fileInput" accept="image/*"><br>
+    <button onclick="subirRadiografia()">Subir</button>
+    <div id="resultado"></div>
+  </div>
+
+  <script>
+    const WEB_APP_URL = "https://script.google.com/home/projects/1r1nTm7K_aw1cQiMv2K6rbQW9MDClIlq756BeTBo82aZw3SZLXi6VuFUB/edit"; // pega aquí tu URL
+
+    async function subirRadiografia() {
+      const fileInput = document.getElementById("fileInput");
+      if (!fileInput.files.length) return alert("Seleccione una imagen");
+
+      const file = fileInput.files[0];
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = async () => {
+        const base64 = reader.result.split(",")[1];
+        const data = new URLSearchParams();
+        data.append("file", base64);
+        data.append("name", file.name);
+        data.append("mimeType", file.type);
+
+        try {
+          const res = await fetch(WEB_APP_URL, { method: "POST", body: data });
+          const result = await res.json();
+          document.getElementById("resultado").innerHTML = `
+            ✅ Subida exitosa<br>
+            Código: <b>${result.code}</b><br>
+            <a href="${result.link}" target="_blank">Ver en Drive</a>
+          `;
+        } catch (err) {
+          document.getElementById("resultado").innerHTML = "❌ Error al subir: " + err;
+        }
+      };
+    }
+  </script>
+</body>
+</html>
